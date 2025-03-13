@@ -1,0 +1,1 @@
+This application is a real-time weather monitoring system built using Python Django, Kafka, and the OpenWeather API. It streams live weather updates using Kafka's real-time data processing, ensuring users receive up-to-date weather information instantly
