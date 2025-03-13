@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Map</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+    <style>
+        #map { height: 500px; width: 100%; }
+    </style>
+</head>
+<body>
+
+    <h2>Real-Time Weather Map</h2>
+    <div id="map"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    
+    <script>
+        var map = L.map('map').setView([-1.2833, 36.8167], 10); // Nairobi Coordinates
+
+        // Load OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        function fetchWeather() {
+            fetch('/weather-data/')  // Django API Endpoint
+            .then(response => response.json())
+            .then(data => {
+                console.log("Weather Data:", data);
+                
+                // Clear existing markers (if needed)
+                map.eachLayer(layer => {
+                    if (layer instanceof L.Marker) {
+                        map.removeLayer(layer);
+                    }
+                });
+
+                // Add a marker for the weather data
+                var marker = L.marker([data.latitude, data.longitude]).addTo(map)
+                    .bindPopup(`<b>Weather:</b> ${data.weather_description}<br>
+                                <b>Temp:</b> ${data.temperature}°C<br>
+                                <b>Humidity:</b> ${data.humidity}%<br>
+                                <b>Wind Speed:</b> ${data.wind_speed} m/s`)
+                    .openPopup();
+            })
+            .catch(error => console.error('Error fetching weather data:', error));
+        }
+
+        // Fetch weather data every 30 seconds
+        fetchWeather();
+        setInterval(fetchWeather, 30000);
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,5 @@
+*** REAL TIME WEATHER APPLICATION USING KAFKA ,OPENWEATHERMAP API AND PYTHON(DJANGO) ***
+-for kafka application we have to install kafka and zookeeper in our system.
+
+
+
